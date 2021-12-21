@@ -125,7 +125,7 @@ public String preTransfer(String fromAcct, String toAcct, Long amount, String in
       	record = 根据initSeqNo在fw_tran_info表中获取记录for update;
       	if(record == null){
           	isEmpty = true;
-          	新增一条fw_tran_info的记录，status=I;
+          	新增一条fw_tran_info的记录, status=I;
         }
       	commit;
     }catch(Exception e){
@@ -167,12 +167,12 @@ public String preTransfer(String fromAcct, String toAcct, Long amount, String in
 ```java
 public String transfer(String fromAcct, String toAcct, Long amount, String initSeqNo){
 		在account_tab中获取fromAcct/toAcct记录，若不为热点户，需要对记录加锁for update;// 热点户先从cache中获取
-  	seq_no = initSeqNo + 'EBK';
+  	seq_no = initSeqNo + "EBK";
   	// handle debit
   	if(fromAcct is 热点户){
-      	记录到hot_tran_hist表中，status=W,tranDirection=0;
+      	记录到hot_tran_hist表中,status=W,tranDirection=0;
     }else{
-      	记录更新到tran_hist_tab表中，tranDirection=0, pre_balance为当前的balance;
+      	记录更新到tran_hist_tab表中,tranDirection=0, pre_balance为当前的balance;
       	balance = balance - amount;
       	if(balance < 0){
           	抛异常;
@@ -182,9 +182,9 @@ public String transfer(String fromAcct, String toAcct, Long amount, String initS
   	
   	// handle credit
   	if(toAcct is 热点户){
-      	记录到hot_tran_hist表中，status=W, tranDirection=1;
+      	记录到hot_tran_hist表中,status=W, tranDirection=1;
     }else{
-      	记录更新到tran_hist_tab表中，tranDirection=1, pre_balance为当前的balance;
+      	记录更新到tran_hist_tab表中,tranDirection=1, pre_balance为当前的balance;
       	balance = balance + amount;
       	if(balance > Long.MAX_VALUE){
           	抛异常;
