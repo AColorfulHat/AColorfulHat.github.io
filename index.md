@@ -119,40 +119,40 @@
 
 ```java
 public String preTransfer(String fromAcct, String toAcct, Long amount, String initSeqNo) {
-	isEmpty = false;
-	开启事务;// 好像不需要？？？
-	try{
-		record = 根据initSeqNo在fw_tran_info表中获取记录for update;
-		if(record == null){
-			isEmpty = true;
-			新增一条fw_tran_info的记录, status=I;
-		}
-		commit;
-	}catch(Exception e){
-		rollback;
-		return 异常;
-	}
-
-	record = 根据initSeqNo在fw_tran_info表中获取记录;
-	开启事务; //涉及多张表，需要事务
-	try{
-		if(isEmpty){
-			newSeqNo = transfer(fromAcct, toAcct, amount, seqNo);// refer to 2.转账
-			record.setOutMsg(newSeqNo)且Status=S,并更新到fw_tran_info;
-			commits;
-			return newSeqNo;
-		}else{
-			outMsg = record.getOutMsg();
-			if(outMsg != null){
-				return outMsg;
-			}else{
-				return 正在处理中的异常;
-			}
-		}
-	}catch(Exception e){
-		rollback;
-		return 异常;
-	}
+    isEmpty = false;
+    开启事务;// 好像不需要？？？
+    try{
+      	record = 根据initSeqNo在fw_tran_info表中获取记录for update;
+      	if(record == null){
+            isEmpty = true;
+            新增一条fw_tran_info的记录，status=I;
+        }
+      	commit;
+    }catch(Exception e){
+      	rollback;
+      	return 异常;
+    }
+  	
+    record = 根据initSeqNo在fw_tran_info表中获取记录;
+    开启事务; //涉及多张表，需要事务
+    try{
+      	if(isEmpty){
+            newSeqNo = transfer(fromAcct, toAcct, amount, seqNo);// refer to 2.转账
+            record.setOutMsg(newSeqNo)且Status=S,并更新到fw_tran_info;
+            commits;
+            return newSeqNo;
+        }else{
+            outMsg = record.getOutMsg();
+            if(outMsg != null){
+              	return outMsg;
+            }else{
+              	return 正在处理中的异常;
+            }
+        }
+    }catch(Exception e){
+      	rollback;
+      	return 异常;
+    }
 }
 ```
 
@@ -166,32 +166,34 @@ public String preTransfer(String fromAcct, String toAcct, Long amount, String in
 
 ```java
 public String transfer(String fromAcct, String toAcct, Long amount, String initSeqNo){
-	在account_tab中获取fromAcct/toAcct记录,若不为热点户,需要对记录加锁for update;// 热点户先从cache中获取
-  	seq_no = initSeqNo + "EBK";
-  	// handle debit
-  	if(fromAcct is 热点户){
-      		记录到hot_tran_hist表中,status=W,tranDirection=0;
-	}else{
-		记录更新到tran_hist_tab表中,tranDirection=0, pre_balance为当前的balance;
-		balance = balance - amount;
-		if(balance < 0){
-			抛异常;
-		}
-		更新account_tab表的balance;
+
+    在account_tab中获取fromAcct/toAcct记录,若不为热点户,需要对记录加锁for update;// 热点户先从cache中获取
+    seq_no = initSeqNo + "EBK";
+    
+    // handle debit
+    if(fromAcct is 热点户){
+      	记录到hot_tran_hist表中,status=W,tranDirection=0;
+    }else{
+	记录更新到tran_hist_tab表中,tranDirection=0, pre_balance为当前的balance;
+	balance = balance - amount;
+	if(balance < 0){
+	    抛异常;
+	}
+	更新account_tab表的balance;
 	}
   	
-  	// handle credit
-  	if(toAcct is 热点户){
-      		记录到hot_tran_hist表中,status=W, tranDirection=1;
-    	}else{
-      		记录更新到tran_hist_tab表中,tranDirection=1, pre_balance为当前的balance;
-      		balance = balance + amount;
-      		if(balance > Long.MAX_VALUE){
-          		抛异常;
-        	}
-      		更新account_tab表的balance;
-    	}
-  	return seq_no;
+    // handle credit
+    if(toAcct is 热点户){
+      	记录到hot_tran_hist表中,status=W, tranDirection=1;
+    }else{
+      	记录更新到tran_hist_tab表中,tranDirection=1, pre_balance为当前的balance;
+      	balance = balance + amount;
+      	if(balance > Long.MAX_VALUE){
+            抛异常;
+        }
+      	更新account_tab表的balance;
+    }
+    return seq_no;
 }
 ```
 
@@ -205,27 +207,27 @@ public String transfer(String fromAcct, String toAcct, Long amount, String initS
 ```java
 @Scheduled(cron = "0 */1 * * * ?") //一分钟执行一次
 public void refreshHotBalance() {
-  	do{
-      		开启事务;
-      		try{
-          		新建cache;
-          		recordList = 批量在hot_tran_hist获取status=W的记录limit 1000; // order by account_id
-		    	for(record: recordList){
-				在account_tab中获取record.getAccountId的记录 for update; //存入cache
-				根据record的记录新增tran_hist_tab的记录;
-				if(record.tranDirection == 0){
-					balance = account.balance - amount;
-				}else{
-					balance = account.balance + amount;
-				}
-				更新account的余额;
-				更新hot_tran_hist这条record的status=E;
-		    	}
-			commits;
-		}catch(Exception e){
-			rollback;
-			抛异常;
+    do{
+      	开启事务;
+      	try{
+            新建cache;
+            recordList = 批量在hot_tran_hist获取status=W的记录limit 1000; // order by account_id
+	    for(record: recordList){
+		在account_tab中获取record.getAccountId的记录 for update; //存入cache
+		根据record的记录新增tran_hist_tab的记录;
+		if(record.tranDirection == 0){
+		    balance = account.balance - amount;
+		}else{
+		    balance = account.balance + amount;
 		}
+		更新account的余额;
+		更新hot_tran_hist这条record的status=E;
+	    }
+	    commits;
+	}catch(Exception e){
+	    rollback;
+	    抛异常;
+	}
     }while(批量在hot_tran_hist获取记录的数量<1000)
 }
 ```
