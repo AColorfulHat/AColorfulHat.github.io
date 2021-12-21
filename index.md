@@ -166,7 +166,7 @@ public String preTransfer(String fromAcct, String toAcct, Long amount, String in
 
 ```java
 public String transfer(String fromAcct, String toAcct, Long amount, String initSeqNo){
-		在account_tab中获取fromAcct/toAcct记录，若不为热点户，需要对记录加锁for update;// 热点户先从cache中获取
+		在account_tab中获取fromAcct/toAcct记录,若不为热点户,需要对记录加锁for update;// 热点户先从cache中获取
   	seq_no = initSeqNo + "EBK";
   	// handle debit
   	if(fromAcct is 热点户){
@@ -218,7 +218,7 @@ public void refreshHotBalance() {
                 }else{
                   	balance = account.balance + amount;
                 }
-              	更新account的余额；
+              	更新account的余额;
                 更新hot_tran_hist这条record的status=E;
             }
           	commits;
