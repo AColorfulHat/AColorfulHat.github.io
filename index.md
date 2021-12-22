@@ -243,14 +243,36 @@ public void refreshHotBalance() {
    prev_balance可以不连续
 
 ## 6. 性能测试
-
 - one2many
 
   热点户向多个普通账户转账
 
+  1. 插⼊1个热点户，账户序号是100000，初始余额为1,000,000,000
+  2. 插⼊10000个普通账户，账户序号范围是[110000,120000)，初始余额为0
+  3. 准备测试⽤例，金额范围是[100,200]，用例条数是10000，重复率是0
+
+  **最终：**
+
+  **Requests per second:    172.41 [#/sec] (mean)**
+  
+  **Time per request:       57.93 [ms] (mean)**
+  
+  **Time per request:       5.80 [ms] (mean, across all concurrent requests)**
+
 - one2one
 
   普通账户之间互相转账
+
+  1. 插⼊2个普通账户，账户序号分别是200001和200002，初始余额为1,000,000
+  2. 准备测试⽤例，金额范围是[100,200]，用例条数是10000，重复率是0
+
+  **最终：**
+
+  **Requests per second:    54.27 [#/sec] (mean)**
+  
+  **Time per request:       184.11 [ms] (mean)**
+  
+  **Time per request:       18.43 [ms] (mean, across all concurrent requests)**
 
 - many2many
 
@@ -258,9 +280,32 @@ public void refreshHotBalance() {
 
   一定概率重复出现（防重）
 
+  1. 插⼊10000个普通账户，账户序号范围是[310000,320000)，初始余额为1,000,000
+  2. 准备测试⽤例，金额范围是[100,200]，独立用例条数是10000，重复率是20%（总用例约12000）
+
+  **最终：**
+
+  **Requests per second:    137.86 [#/sec] (mean)**
+  
+  **Time per request:       72.46 [ms] (mean)**
+  
+  **Time per request:       7.25 [ms] (mean, across all concurrent requests)**
+
 - many2one
 
   多个普通账户向一个普通账户转账
+
+  1. 插⼊1个普通账户，账户序号分别是400000，初始余额为0
+  2. 插⼊10000个普通账户，账户序号范围是[410000,420000)，初始余额为1,000,000
+  3. 准备测试⽤例，金额范围是[100,200]，用例条数是10000，重复率是0
+
+  **最终：**
+
+  **Requests per second:    55.14 [#/sec] (mean)**
+  
+  **Time per request:       181.24 [ms] (mean)**
+  
+  **Time per request:       18.14 [ms] (mean, across all concurrent requests)**
 
 ## 7. 总结
 
