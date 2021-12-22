@@ -306,3 +306,16 @@ public void refreshHotBalance() {
 - 一般如何做防重
   - 数据库
   - redis？
+
+
+## 8. 补充
+
+- 若热点户不可透支应如何处理？
+  - 获取当前热点户balance（不加锁）
+  - 插入当前流水到hot_tran_hist中，提交事务（为了让别的看到）
+  - 计算balance+sum（hot_tran_hist当前账户的所有status=W的记录的amount)
+    - 若 > 下限， ok，退出
+    - 若 < 上限，ok，退出
+  - 将刚插入的流水的状态status=E，后续不做任何处理
+
+
