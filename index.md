@@ -251,13 +251,7 @@ public void refreshHotBalance() {
   2. 插⼊10000个普通账户，账户序号范围是[110000,120000)，初始余额为0
   3. 准备测试⽤例，金额范围是[100,200]，用例条数是10000，重复率是0
 
-  **最终：**
-
-  **Requests per second:    172.41 [#/sec] (mean)**
   
-  **Time per request:       57.93 [ms] (mean)**
-  
-  **Time per request:       5.80 [ms] (mean, across all concurrent requests)**
 
 - one2one
 
@@ -266,13 +260,7 @@ public void refreshHotBalance() {
   1. 插⼊2个普通账户，账户序号分别是200001和200002，初始余额为1,000,000
   2. 准备测试⽤例，金额范围是[100,200]，用例条数是10000，重复率是0
 
-  **最终：**
-
-  **Requests per second:    54.27 [#/sec] (mean)**
   
-  **Time per request:       184.11 [ms] (mean)**
-  
-  **Time per request:       18.43 [ms] (mean, across all concurrent requests)**
 
 - many2many
 
@@ -283,13 +271,7 @@ public void refreshHotBalance() {
   1. 插⼊10000个普通账户，账户序号范围是[310000,320000)，初始余额为1,000,000
   2. 准备测试⽤例，金额范围是[100,200]，独立用例条数是10000，重复率是20%（总用例约12000）
 
-  **最终：**
-
-  **Requests per second:    137.86 [#/sec] (mean)**
   
-  **Time per request:       72.46 [ms] (mean)**
-  
-  **Time per request:       7.25 [ms] (mean, across all concurrent requests)**
 
 - many2one
 
@@ -299,13 +281,18 @@ public void refreshHotBalance() {
   2. 插⼊10000个普通账户，账户序号范围是[410000,420000)，初始余额为1,000,000
   3. 准备测试⽤例，金额范围是[100,200]，用例条数是10000，重复率是0
 
-  **最终：**
 
-  **Requests per second:    55.14 [#/sec] (mean)**
-  
-  **Time per request:       181.24 [ms] (mean)**
-  
-  **Time per request:       18.14 [ms] (mean, across all concurrent requests)**
+
+总结：
+
+| 用例      | **Requests per second****[#/sec] (mean)** | **Time per request [ms] (mean)** | **Time per request [ms] (mean, across all concurrent requests)** |
+| --------- | ----------------------------------------- | -------------------------------- | ------------------------------------------------------------ |
+| one2many  | **172.41**                                | **57.93**                        | **5.80**                                                     |
+| one2one   | 54.27                                     | 184.11                           | 18.43                                                        |
+| many2many | 137.86                                    | 72.46                            | 7.25                                                         |
+| many2one  | 55.14                                     | 181.24                           | 18.14                                                        |
+
+
 
 ## 7. 总结
 
