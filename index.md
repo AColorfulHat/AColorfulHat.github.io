@@ -288,7 +288,7 @@ public void refreshHotBalance() {
 | **用例**      | **Requests per second****[#/sec] (mean)** | **Time per request [ms] (mean)** | **Time per request [ms] (mean, across all concurrent requests)** |
 | --------- | ----------------------------------------- | -------------------------------- | ------------------------------------------------------------ |
 | **one2many**  | **172.41**                                | **57.93**                        | **5.80**                                                     |
-| **one2one **  | 54.27                                     | 184.11                           | 18.43                                                        |
+| **one2one**  | 54.27                                     | 184.11                           | 18.43                                                        |
 | **many2many** | 137.86                                    | 72.46                            | 7.25                                                         |
 | **many2one**  | 55.14                                     | 181.24                           | 18.14                                                        |
 
