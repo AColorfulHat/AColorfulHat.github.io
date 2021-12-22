@@ -120,12 +120,12 @@
 ```java
 public String preTransfer(String fromAcct, String toAcct, Long amount, String initSeqNo) {
     isEmpty = false;
-    开启事务;// 好像不需要？？？
+    开启事务;// 需要开启事务, 否则加锁无效
     try{
       	record = 根据initSeqNo在fw_tran_info表中获取记录for update;
       	if(record == null){
             isEmpty = true;
-            新增一条fw_tran_info的记录，status=I;
+            新增一条fw_tran_info的记录, status=I;
         }
       	commit;
     }catch(Exception e){
